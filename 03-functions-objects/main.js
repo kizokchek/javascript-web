@@ -1,7 +1,8 @@
-const user = [
-    {id:1, login: "1", password:"1", 'VIP', 'sale: 20'}
-    {id:2, login:"2", password:"2", 'registerd', sale: 5}
+const users = [
+    {id:1, login: "1", password:"1", type:'VIP', sale:20},
+    {id:2, login:"2", password:"2", type:'registered', sale:5}
 ];
+
 
 const products = [
     {
@@ -60,6 +61,7 @@ const products = [
     }    
 ];
 
+
 // повертає об'єкт - користувача, або пустий об'єкт
 function userVerification(login, password){
     for (let i = 0; i < user.length; i++){
@@ -69,14 +71,53 @@ function userVerification(login, password){
     return {}
 }
 
+
 let userRegistered = 'public';
 let userLogin;
 let userPassword;
 let user = {}
+
 
 if (confirm("Ви зареєстрований?")) {
     userLogin = prompt('Введіть логін:')
     userPassword = prompt('Введіть пароль:')
     user = userVerification(userLogin, userPassword)
 }
-console.log(users);
+
+
+console.log('user=', user);
+
+
+let container = "<header><h1>Funko</h1></header>"
+container += "<section><h2>Новинки</h2>"
+let divProducts = '';
+
+
+function makeDiv(product) {
+if (user.hasOwnProperty('id') && user.type == 'VIP'){
+    price = Math.round(product.price * ((100 - user.sale) / 100))
+}
+
+    return '<div>'
+        + '<p><img src="images/' + product.img +'"></p>'
+        + '<h4>'+ product.name +'</h4>'
+        + '<p>'+ product.price +'</p>'
+        + '</div>';
+}
+
+
+for (let i = 0; i < products.length; i++) {
+    if (user.hasOwnProperty('id')){
+        divProducts += makeDiv(products[i])
+    } else {
+        if( products[i].type == 'VIP')
+            divProducts += makeDiv(products[i])
+    }
+}
+
+
+container += divProducts;
+
+
+container += '</section>'
+document.body.innerHTML = container;
